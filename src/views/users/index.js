@@ -1,9 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Table, Button } from 'reactstrap';
+import AddUserModal from './AddUserModal';
 
 function Index() {
 
+	const [modalOpen, setModalOpen] = useState(false);
 	const [users, setUsers] = useState([]);
+
+	const toggleModal = () => setModalOpen(!modalOpen);
+
+	const handleAddUser = (newUser) => {
+		const id = users.length + 1;
+		const avatar = '/images/avatar.png';
+		setUsers([...users, { id, avatar, ...newUser }]);
+	};
 
 	useEffect(() => {
 		const fetchUsers = async () => {
@@ -12,7 +22,7 @@ function Index() {
 				const data = await response.json();
 				setUsers(data.data);
 			} catch (error) {
-				console.error('Failed to fetch users:', error);
+				console.error('Error in fetching users:', error);
 			}
 		};
 
@@ -23,7 +33,7 @@ function Index() {
 	return (
 		<Container>
 			<div className='mt-3 text-right'>
-				<Button color='primary'>+ Add User</Button>
+				<Button color='primary' onClick={toggleModal}>+ Add User</Button>
 			</div>
 
 			<Table className='mt-3'>
@@ -56,6 +66,12 @@ function Index() {
 
 				</tbody>
 			</Table>
+
+			<AddUserModal
+				isOpen={modalOpen}
+				toggle={toggleModal}
+				onSubmit={handleAddUser}
+			/>
 		</Container>
 	);
 }

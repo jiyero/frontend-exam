@@ -4,6 +4,8 @@ import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import {Page} from 'components/Pages';
 import Home from 'views/home';
 import Users from 'views/users';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 function App() {
 	return (
