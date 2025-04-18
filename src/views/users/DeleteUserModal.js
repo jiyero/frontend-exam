@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 
 function DeleteUserModal({ isOpen, toggle, user, onConfirm }) {
 
@@ -7,11 +7,13 @@ function DeleteUserModal({ isOpen, toggle, user, onConfirm }) {
     return (
         <Modal isOpen={isOpen} toggle={toggle}>
             <ModalHeader>Delete User</ModalHeader>
-            <ModalBody>
+            <ModalBody className = "text-center">
                 {user?.avatar && (
                     <img
                         src={user.avatar}
                         alt={`${user.first_name} ${user.last_name}`}
+                        className = "rounded-circle m-3"
+                        style={{width: '80px', height: '80px', objectFit: 'cover'}}
                     />
                 )}
 
@@ -20,11 +22,11 @@ function DeleteUserModal({ isOpen, toggle, user, onConfirm }) {
                 </div>
             </ModalBody>
             <ModalFooter>
-            <button onClick = {()=>{
+            <Button color ="danger" onClick = {()=>{
                 onConfirm(user.id);
                 toggle();
-            }}>Delete</button>
-            <button type="button" onClick={toggle}>Cancel</button>
+            }}>Delete</Button>
+            <Button type="button" onClick={toggle}>Cancel</Button>
             </ModalFooter>
         </Modal>
     )

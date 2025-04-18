@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import {
+    Modal,
+    ModalHeader,
+    ModalBody,
+    ModalFooter,
+    Form,
+    FormGroup,
+    Label,
+    Input,
+    Button,
+  } from 'reactstrap';
 
 function EditUserModal({ isOpen, toggle, user, onSubmit }) {
 
@@ -34,9 +44,10 @@ function EditUserModal({ isOpen, toggle, user, onSubmit }) {
         <Modal isOpen={isOpen} toggle={toggle}>
             <ModalHeader toggle={toggle}>Edit User</ModalHeader>
             <ModalBody>
-                <form onSubmit={handleSubmit}>
-                    <div>
-                        <input
+                <Form onSubmit={handleSubmit}>
+                    <FormGroup>
+                        <Label for="email">Email</Label>
+                        <Input
                             type="email"
                             name="email"
                             placeholder="Email"
@@ -44,10 +55,11 @@ function EditUserModal({ isOpen, toggle, user, onSubmit }) {
                             onChange={handleChange}
                             required
                         />
-                    </div>
+                    </FormGroup>
 
-                    <div>
-                        <input
+                    <FormGroup>
+                    <Label for="first_name">First Name</Label>
+                        <Input
                             type="text"
                             name="first_name"
                             placeholder="First Name"
@@ -55,10 +67,11 @@ function EditUserModal({ isOpen, toggle, user, onSubmit }) {
                             onChange={handleChange}
                             required
                         />
-                    </div>
+                    </FormGroup>
 
-                    <div>
-                        <input
+                    <FormGroup>
+                        <Label for ="last_name">Last Name</Label>
+                        <Input
                             type="text"
                             name="last_name"
                             placeholder="Last Name"
@@ -66,13 +79,13 @@ function EditUserModal({ isOpen, toggle, user, onSubmit }) {
                             onChange={handleChange}
                             required
                         />
-                    </div>
+                    </FormGroup>
 
                     <ModalFooter>
-                        <button type="submit">Save</button>
-                        <button type="button" onClick={toggle}>Cancel</button>
+                        <Button color="warning" type="submit">Save</Button>
+                        <Button type="button" onClick={toggle}>Cancel</Button>
                     </ModalFooter>
-                </form>
+                </Form>
             </ModalBody>
 
         </Modal>

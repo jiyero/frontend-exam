@@ -7,20 +7,19 @@ import DeleteUserModal from './DeleteUserModal';
 function Index() {
 
 
-	
 	const [addModalOpen, setAddModalOpen] = useState(false);
 	const [editModalOpen, setEditModal] = useState(false);
 	const [deleteModalOpen, setDeleteModal] = useState(false);
-  
+
 	const [users, setUsers] = useState([]);
 	const [selectedUser, setSelectedUser] = useState(null);
 	const [userDelete, setUserDelete] = useState(null);
-  
+
 	const toggleAddModal = () => setAddModalOpen(!addModalOpen);
 	const toggleEditModal = () => setEditModal(!editModalOpen);
 	const toggleDeleteModal = () => setDeleteModal(!deleteModalOpen);
 
-	useEffect(() => { //fetch api from url
+	useEffect(() => {
 		const fetchUsers = async () => {
 			try {
 				const response = await fetch('https://reqres.in/api/users');
@@ -75,19 +74,42 @@ function Index() {
 						<tr key={user.id}>
 							<th scope='row'>{user.id}</th>
 							<td>
-								<img src={user.avatar}></img>
+								<img src={user.avatar}
+									alt={`${user.first_name}'s avatar`}
+									className="rounded-circle"
+									style={{ width: '40px', height: '40px', objectFit: 'cover' }}
+								/>
 							</td>
 							<td>{user.email}</td>
 							<td>{user.first_name}</td>
 							<td>{user.last_name}</td>
-							<button onClick={() => {
-								setSelectedUser(user);
-								toggleEditModal();
-							}}>Edit</button>
-							<button onClick = {()=>{
-								setUserDelete(user);
-								toggleDeleteModal();
-							}}>Delete</button>
+							<td>
+								<div className="d-flex justify-content-center">
+									<Button
+										color="warning"
+										size="sm"
+										className="me-2"
+										style={{width: '60px'}}
+										onClick={() => {
+											setSelectedUser(user);
+											toggleEditModal();
+										}}
+									>
+										Edit
+									</Button>
+									<Button
+										color="danger"
+										size="sm"
+										style={{width: '60px'}}
+										onClick={() => {
+											setUserDelete(user);
+											toggleDeleteModal();
+										}}
+									>
+										Delete
+									</Button>
+								</div>
+							</td>
 						</tr>
 					))}
 
@@ -107,7 +129,7 @@ function Index() {
 					onSubmit={handleEditUser}
 					user={selectedUser}
 				/>
-			)}	
+			)}
 
 			<DeleteUserModal
 				isOpen={deleteModalOpen}

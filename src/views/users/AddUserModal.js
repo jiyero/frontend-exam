@@ -1,16 +1,26 @@
 import React, { useState } from 'react';
-import { Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import {
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  Button,
+} from 'reactstrap';
 
 function AddUserModal({ isOpen, toggle, onSubmit }) {
   const [formData, setFormData] = useState({
     email: '',
     first_name: '',
-    last_name: ''
+    last_name: '',
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e) => {
@@ -24,44 +34,55 @@ function AddUserModal({ isOpen, toggle, onSubmit }) {
     <Modal isOpen={isOpen} toggle={toggle}>
       <ModalHeader toggle={toggle}>Add User</ModalHeader>
       <ModalBody>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <input
+        <Form onSubmit={handleSubmit}>
+          <FormGroup>
+            <Label for="email">Email</Label>
+            <Input
               type="email"
               name="email"
-              placeholder="Email"
+              id="email"
+              placeholder="Enter email"
               value={formData.email}
               onChange={handleChange}
               required
             />
-          </div>
-          
-          <div>
-            <input
+          </FormGroup>
+
+          <FormGroup>
+            <Label for="first_name">First Name</Label>
+            <Input
               type="text"
               name="first_name"
-              placeholder="First Name"
+              id="first_name"
+              placeholder="Enter first name"
               value={formData.first_name}
               onChange={handleChange}
               required
             />
-          </div>
+          </FormGroup>
 
-          <div>
-            <input
+          <FormGroup>
+            <Label for="last_name">Last Name</Label>
+            <Input
               type="text"
               name="last_name"
-              placeholder="Last Name"
+              id="last_name"
+              placeholder="Enter last name"
               value={formData.last_name}
               onChange={handleChange}
               required
             />
-          </div>
+          </FormGroup>
+
           <ModalFooter>
-            <button type = "submit">Create</button>
-            <button onClick = {toggle}>Cancel</button>
+            <Button type="submit" color="primary">
+              Create
+            </Button>
+            <Button color="secondary" onClick={toggle}>
+              Cancel
+            </Button>
           </ModalFooter>
-        </form>
+        </Form>
       </ModalBody>
     </Modal>
   );
