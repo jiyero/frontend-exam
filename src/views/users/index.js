@@ -5,7 +5,8 @@ import EditUserModal from './EditUserModal';
 import DeleteUserModal from './DeleteUserModal';
 
 function Index() {
-
+	const [currentPage, setCurrentPage] = useState(1);
+	const [usersPerPage] = useState(10);
 
 	const [addModalOpen, setAddModalOpen] = useState(false);
 	const [editModalOpen, setEditModal] = useState(false);
@@ -18,6 +19,12 @@ function Index() {
 	const toggleAddModal = () => setAddModalOpen(!addModalOpen);
 	const toggleEditModal = () => setEditModal(!editModalOpen);
 	const toggleDeleteModal = () => setDeleteModal(!deleteModalOpen);
+
+	const lastUserIndex = usersPerPage * currentPage;
+	const firstUserIndex = lastUserIndex - usersPerPage;
+	const currentUsers = users.slice(firstUserIndex, lastUserIndex);
+
+	const totalPages = Math.ceil(users.length / usersPerPage);
 
 	useEffect(() => {
 		const fetchUsers = async () => {
@@ -33,22 +40,54 @@ function Index() {
 		fetchUsers();
 	}, []);
 
+	const handleAddUser = async (newUser) => {
+		const response = await fetch('https://reqres.in/api/users', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(newUser),
+		});
 
-	const handleAddUser = (newUser) => { //add user
+		const data = await response.json();
+		console.log(data);
+
 		const id = users.length + 1;
 		const avatar = '/images/avatar.png';
 		setUsers([...users, { id, avatar, ...newUser }]);
 	};
 
-	const handleEditUser = (updatedUser) => {//edit user
-		setUsers(users.map(user =>
-			user.id === updatedUser.id ? updatedUser : user
-		));
+	const handleEditUser = async (updatedUser) => {
+		try {
+			const response = await fetch(`https://reqres.in/api/users/${updatedUser.id}`, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(updatedUser),
+			});
+
+			const data = await response.json();
+			console.log(data);
+
+			setUsers(users.map(user =>
+				user.id === updatedUser.id ? { ...user, ...updatedUser } : user
+			));
+		} catch (error) {
+			console.error('Failed to update user:', error);
+		}
 	};
 
-	const handleDeleteUser = (userId) => { //delete user
-		setUsers(users.filter(user => user.id !== userId));
-	}
+	const handleDeleteUser = async (userId) => {
+		try {
+			await fetch(`https://reqres.in/api/users/${userId}`, {
+				method: 'DELETE',
+			});
+			setUsers(users.filter(user => user.id !== userId));
+		} catch (error) {
+			console.error('Failed to delete user:', error);
+		}
+	};
 
 	return (
 		<Container>
@@ -67,14 +106,13 @@ function Index() {
 						<th />
 					</tr>
 				</thead>
-
 				<tbody>
-
-					{users.map((user) => (
+					{currentUsers.map((user) => (
 						<tr key={user.id}>
 							<th scope='row'>{user.id}</th>
 							<td>
-								<img src={user.avatar}
+								<img
+									src={user.avatar}
 									alt={`${user.first_name}'s avatar`}
 									className="rounded-circle"
 									style={{ width: '40px', height: '40px', objectFit: 'cover' }}
@@ -89,7 +127,7 @@ function Index() {
 										color="warning"
 										size="sm"
 										className="me-2"
-										style={{width: '60px'}}
+										style={{ width: '60px' }}
 										onClick={() => {
 											setSelectedUser(user);
 											toggleEditModal();
@@ -100,7 +138,7 @@ function Index() {
 									<Button
 										color="danger"
 										size="sm"
-										style={{width: '60px'}}
+										style={{ width: '60px' }}
 										onClick={() => {
 											setUserDelete(user);
 											toggleDeleteModal();
@@ -112,9 +150,31 @@ function Index() {
 							</td>
 						</tr>
 					))}
-
 				</tbody>
 			</Table>
+
+			{/* Pagination buttons */}
+			<div className="d-flex justify-content-center align-items-center mt-3">
+				<Button
+					color="secondary"
+					disabled={currentPage === 1}
+					onClick={() => setCurrentPage(currentPage - 1)}
+				>
+					Previous
+				</Button>
+
+				<span className="mx-3">
+					Page {currentPage} of {totalPages}
+				</span>
+
+				<Button
+					color="secondary"
+					disabled={currentPage === totalPages}
+					onClick={() => setCurrentPage(currentPage + 1)}
+				>
+					Next
+				</Button>
+			</div>
 
 			<AddUserModal
 				isOpen={addModalOpen}
@@ -134,7 +194,7 @@ function Index() {
 			<DeleteUserModal
 				isOpen={deleteModalOpen}
 				toggle={toggleDeleteModal}
-				onConfirm={handleDeleteUser}
+				onConfirm={() => handleDeleteUser(userDelete.id)}
 				user={userDelete}
 			/>
 		</Container>
