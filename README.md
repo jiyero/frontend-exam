@@ -2,6 +2,17 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Instructions to run the project 
+
+### 1. Clone the repository 
+```git clone https://github.com/jiyero/frontend-exam ```
+
+## 2. Install dependencies 
+``` npm install ```
+
+## 3. Run the App 
+``` npm run ```
+
 ## Environments
 
 Node: v16.18.1\
